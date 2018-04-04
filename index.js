@@ -5,7 +5,7 @@ let tripID = 0
 
 
 class Driver {
-  constructor(name, id) {
+  constructor(name) {
     this.id = ++driverID;
     this.name = name;
 
@@ -17,9 +17,10 @@ class Driver {
   }
 
   passengers() {
-    let driverPassengers = []
-    this.trips().forEach(trip => {driverPassengers.push(store.passengers.find(passenger => {return trip.passengerId === passenger.id}))})
-    return driverPassengers;
+    // let driverPassengers = []
+    // this.trips().forEach(trip => {driverPassengers.push(store.passengers.find(passenger => {return trip.passengerId === passenger.id}))})
+    // return driverPassengers;
+    return this.trips().map(trip => trip.passenger())
   }
 }
 
@@ -35,9 +36,10 @@ class Passenger {
   }
 
   drivers() {
-    let passengerDrivers = [];
-    this.trips().forEach(trip => {passengerDrivers.push(store.drivers.find(driver => {return trip.driverId === driver.id}))})
-    return passengerDrivers
+    // let passengerDrivers = [];
+    // this.trips().forEach(trip => {passengerDrivers.push(store.drivers.find(driver => {return trip.driverId === driver.id}))})
+    // return passengerDrivers
+    return this.trips().map(trip => trip.driver())
   }
 }
 
