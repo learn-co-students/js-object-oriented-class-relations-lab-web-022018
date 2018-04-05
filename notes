@@ -1,0 +1,96 @@
+when an objects function returns "this", the object is returned
+https://learn.co/tracks/web-development-immersive-2-0-module-three/new-stuff/object-oriented-js/this
+example:
+let person = {
+  greet: function(){
+    return this     }}
+typeof person.greet       // 'function'
+person.greet() == person  // true
+******note*****
+let greetFn = person.greet  //this will not point to function rather, invoking the function, in the context of the window
+greetFn() == person    // false
+greetFn()             // window
+*******note2*******
+let person = {
+  greet: function greeting(){
+   function otherFunction(){
+     return this   }
+   return otherFunction()  }}
+person.greet()   // window      <---- also ends up in windows
+
+
+https://learn.co/tracks/web-development-immersive-2-0-module-three/new-stuff/object-oriented-js/this-bind-call-apply-code-along
+use call() or apply() to invoke a function with an explicit value for this
+//The first argument for call is always the object that you wish to assign to this for the function.
+//So by using call(gc), we called the serve function, setting this to our gc sandwich object.
+//That way, when we accessed this.name inside of the function, it knew the right sandwich for this.
+function Sandwich (bread, ingredients, name) {
+  this.bread = bread;
+  this.ingredients = ingredients;
+  this.name = name;}
+function serve () {
+  console.log(`Here's your ${this.name}. Enjoy!`);}
+const gc = new Sandwich('White', ['Cheese'], 'Grilled Cheese');
+const pbj = new Sandwich('Wheat', ['Peanut Butter', 'Raspberry Jam'], 'Peanut Butter & Jelly');
+serve.call(gc);     //Instead of invoking the serve() function directly, we're invoking the call() method of the serve function.
+serve.call(pbj);
+
+call vs apply:
+The only real difference between call and apply is the way you pass arguments to the target function.
+apply works very similar to call, except that apply only takes two arguments:
+  the value of this, and then an array of arguments to pass to the target function.
+  serve.call(gc, 'Terry'); vs serve.apply(gc, ['Terry']);  //think call for comma
+  just preference which to use
+
+arguments
+The arguments object doesn't have a slice method, because it isn't an array,
+  so we have to go through Array.prototype to get to the slice function
+  const customers = Array.prototype.slice.call(arguments);
+
+Function borrowing
+a great way to use the functions of another object without having to explicitly write them into your object.
+https://learn.co/tracks/web-development-immersive-2-0-module-three/new-stuff/object-oriented-js/this-bind-call-apply-code-along
+
+bind
+we need to be able to hold on to the function and delay calling it until later. For this, we use bind().
+big difference between bind and call is in the execution. When we use call, we execute the function immediately.
+ When we use bind, we actually create a new function with that this value set, and we can execute it whenever.
+https://learn.co/tracks/web-development-immersive-2-0-module-three/new-stuff/object-oriented-js/this-bind-call-apply-code-along
+bind has "this" bound to it
+
+arrow functions will ALWAYS point to the "this" where arrow is defined
+regular functions could change "this" depending on contenxt.
+example p = func yum(){function(){ this here will change to p}}
+example p = func yum(){()=>{ this here will be to yum}} //also I do implicit returns
+
+
+
+
+Object store
+let store = {items: [
+  {id: 1, price: 2, name: 'red socks', userId: 1},
+  {id: 2, price: 7, name: 'blue shirt', userId: 1},
+  {id: 3, price: 4, name: 'black tshirt', userId: 2}
+  ],
+users: [
+  {id: 1, name: 'Cindy'},
+  {id: 2, name: 'Billy'},
+  {id: 3, name: 'Bobby'}
+]}
+the store object has two keys each of which points to an array:
+ one to represent the collection of items and one to represent the collection of users.
+ let itemId = 0
+ class Item {
+   constructor(price, name, user){
+     this.id = ++itemId
+     this.name = name
+     this.price = price
+     if(user){
+       this.userId = user.id     }
+     // insert in the item to the store
+     store.items.push(this)   }
+   setUser(user){
+     this.userId = user.id   } }
+ let bobby = new User("bobby")
+ let trousers = new Item(24, 'trousers', bobby)
+ store // {users: [{id: 1, name: 'Bobby'}], items: [{id: 1, name: 'trousers', price: 24, userId: 1}]}
